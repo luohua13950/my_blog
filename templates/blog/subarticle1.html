@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block main %}
+                       <form  method="post" action="{% url "blog:sub_article" %}" enctype="multipart/form-data">
+                          {% csrf_token %}
+                            <div align="center">
+                             <label for="{{ form.title.id_for_label }}"></label>
+                                {{ form.title }}
+                            </div>
+                            <div align="center">
+                             <label for="{{ form.category.id_for_label }}">分类：</label>
+                                {{ form.category }}
+                            </div>
+                                  <div align="center">
+                              <label for="{{ form.tags.id_for_label }}">标签：</label>
+                                      {{ form.tags }}
+                            </div>
+                              <div align="center">
+                               <label for="{{ form.body.id_for_label }}"></label>
+                                  {{ form.body }}
+                                   <button type="submit" class="btn btn-primary">发表</button>
+                            </div>
+                        </form>
+{% endblock main %}
+{% block toc %}
+    <div class="widget widget-content">
+        <h3 class="widget-title">目录</h3>
+        <ul>
+            <li>
+                <a href="#">发表文章</a>
+            </li>
+            <li>
+                <a href="#">资源列表</a>
+            </li>
+            <li>
+                <a href="#">优化和建议</a>
+            </li>
+        </ul>
+    </div>
+{% endblock toc %}

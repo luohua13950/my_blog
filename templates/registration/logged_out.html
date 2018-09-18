@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row text-center vertical-middle-sm">
+    <p>你已经退出.</p>
+    <p>继续浏览？<a href="{% url 'blog:login' %}">登录</a> again.</p>
+</div>
+{% endblock %}

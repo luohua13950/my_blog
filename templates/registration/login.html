@@ -1,0 +1,47 @@
+{% load staticfiles %}
+{% load blog_tags %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <style>
+
+</style>
+     <link href={% static "blog/css/bootstrap.min14ed.css"%} rel="stylesheet">
+    <link href={% static "blog/css/font-awesome.min93e3.css" %} rel="stylesheet">
+
+    <link href={% static "blog/css/animate.min.css" %}rel="stylesheet">
+    <link href={% static "blog/css/style.min862f.css" %}rel="stylesheet">
+
+    <script>if(window.top !== window.self){ window.top.location = window.location;}</script>
+</head>
+<body >
+ <div class="middle-box fadeInDown animated text-center center">
+             <div>
+
+                <h1 class="logo-name"></h1>
+
+            </div>
+    <h3>博客</h3>
+
+<form class="form-horizontal" method="post">
+		{% csrf_token %}
+		<!-- {{ form.as_p }} -->
+		<div class="form-group" >
+			<label for="{{ form.username.id_for_label }}" class="col-md-5 control-label" style="color:red"><span class="glyphicon glyphicon-user"></span>用户名</label>
+			<div class="col-md-6 text-left">{{ form.username }}</div>
+		</div>
+		<div class="form-group" >
+			<label for="{{ form.password.id_for_label }}" class="col-md-5 control-label" style="color:blue"><span class="glyphicon glyphicon-floppy-open"></span>密码</label>
+			<div class="col-md-6 text-left">{{ form.password }}</div>
+		</div>
+		<button type="submit" class="btn btn-primary block full-width m-b">登录</button>
+		<p class="text-muted text-center"> <a href="#"><small>忘记密码了？</small></a> | <a href={% url 'blog:register' %}>注册一个新账号</a>
+    </p>
+	</form>
+</div>
+   <script src={% static "blog/js/jquery.min.js?v=2.1.3" %}></script>
+    <script src={% static "blog/js/bootstrap.min.js" %}></script>
+</body>
+</html>
