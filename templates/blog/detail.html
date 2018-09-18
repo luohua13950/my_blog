@@ -23,26 +23,32 @@
                     <form action="{% url 'comments:post_comment' post.pk %}" method="post" class="comment-form">
                           {% csrf_token %}
                           <div class="row">
+                              {% if user.is_authenticated %}
+                                 <div class="col-md-12">
+                              <label for="{{ form.text.id_for_label }}"></label>
+                              {{ form.text }}
+                              {{ form.text.errors }}
+                              <button type="submit" class="btn btn-primary">发表</button>
+                            </div>
+                            {% else %}
                             <div class="col-md-4">
-                              <label for="{{ form.name.id_for_label }}">名字：</label>
+                              <label for="{{ form.name.id_for_label }}"></label>
                               {{ form.name }}
                               {{ form.name.errors }}
                             </div>
                             <div class="col-md-4">
-                              <label for="{{ form.email.id_for_label }}">邮箱：</label>
+                              <label for="{{ form.email.id_for_label }}"></label>
                               {{ form.email }}
                               {{ form.email.errors }}
                             </div>
-                            <div class="col-md-4">
-                              <label for="{{ form.url.id_for_label }}">URL：</label>
-                              {{ form.url }}
-                            </div>
+
                             <div class="col-md-12">
                               <label for="{{ form.text.id_for_label }}">评论：</label>
                               {{ form.text }}
                               {{ form.text.errors }}
                               <button type="submit" class="btn btn-primary">发表</button>
                             </div>
+                              {% endif %}
                           </div>    <!-- row -->
                         </form>
                     <div class="comment-list-panel">

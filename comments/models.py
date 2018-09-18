@@ -5,12 +5,11 @@ from django.db import models
 from blog.models import User
 # Create your models here.
 class Comment(models.Model):
-    name = models.ManyToManyField(User)
+    name = models.CharField(max_length=100,null=True)
     email = models.EmailField(max_length=255,blank=True)
     url = models.URLField(blank=True)
     text = models.TextField()
     create_time = models.DateTimeField(auto_now_add=True)
-
     post = models.ForeignKey('blog.Post')
 
     def __str__(self):

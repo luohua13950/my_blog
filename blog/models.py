@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.six import python_2_unicode_compatible
+
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -32,7 +33,7 @@ class Post(models.Model):
     def auto_increase_view(self):
         self.view +=1
         self.save(update_fields=['view'])
-class User(models.Model):
+class Users(models.Model):
     user_name = models.CharField(max_length=60,unique=True)
     pass_wd = models.CharField(max_length=60)
     def __str__(self):

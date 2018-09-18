@@ -25,13 +25,26 @@
             </div>
     <h3>博客</h3>
 
-<form method = 'post' enctype="multipart/form-data">
+<form class="form-horizontal" action="." method="post">{% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}" class="col-md-5 control-label">用户名</label>
+            <div class="col-md-6 text-left">{{ form.username }}</div>
+        </div>
+<div class="form-group">
+            <label for="{{ form.email.id_for_label }}" class="col-md-5 control-label">邮箱</label>
+            <div class="col-md-6 text-left">{{ form.email }}</div>
+        </div>
 
-    {% csrf_token %}
-    <label >用户名：<input type="text" name="user_name" /></label>
-    <label >密码：<input type="password" name="pass_wd" /></label>
-    {{ info }}
-  <button type="submit" class="btn btn-primary block full-width m-b">注册</button>
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}" class="col-md-5 control-label">密码</label>
+            <div class="col-md-6 text-left">{{ form.password }}</div>
+        </div>
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}" class="col-md-5 control-label">重输密码</label>
+            <div class="col-md-6 text-left">{{ form.password2 }}</div>
+        </div>
+      <button type="submit" class="btn btn-primary block full-width m-b">注册</button>
+    </form>
     {% if messages %}
     <ul class="messages">
     {% for message in messages %}
@@ -39,7 +52,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-<p class="text-muted text-center"> <a href={% url 'blog:sub_article' %}>返回首页</a>
+<p class="text-muted text-center"> <a href={% url 'blog:index' %}>返回首页</a>
 </form>
 </div>
    <script src={% static "blog/js/jquery.min.js?v=2.1.3" %}></script>

@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.shortcuts import render,get_object_or_404,redirect
-from django.http import HttpResponse
-from blog.models import Category,Post,Tag,User
+from django.http import HttpResponse,HttpResponseRedirect
+from blog.models import Category,Post,Tag,Users
 from comments.forms import CommentForm
 from django.views.generic import ListView
 from .forms import Subarticle,Login,Register
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
+from django.utils import timezone
+from django.urls import reverse
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 app_name = 'blog'
 class Index(ListView):
@@ -16,6 +22,7 @@ class Index(ListView):
     context_object_name = 'post_list'
     #post_list = Post.objects.all().order_by("-create_time")
     #return render(request,"blog/index.html",context={"title":"欢迎你","post_list":post_list})
+    paginate_by =  6
 def detail(request,pk):
     post = get_object_or_404(Post,pk=pk)
     post.auto_increase_view()
@@ -31,57 +38,66 @@ def category(request,pk):
     cate = get_object_or_404(Category,pk=pk)
     post_list = Post.objects.filter(category = cate).order_by('-create_time')
     return render(request,'blog/index.html',context={'post_list':post_list})
-
+@login_required(login_url='/blog/login/')
 def sub_article(request):
-
-    return render(request,'blog/subarticle.html')
-def login(request):
-    print 111
+    user = User.objects.get(username = 'root')
+    #这里需要保存用户名
+    time = timezone.localtime(timezone.now()).strftime("%Y-%m-%d %H:%M:%S")
+    if not request.user:
+        user.username = 'root'
+        user.save()
+    user.last_login = time
     if request.method == "POST":
-        print 222222
+        form = Subarticle(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author =request.user
+            post.create_time = time
+            post.modify_time = time
+            post.save()
+            return redirect(post.absolute_url())
+        else:
+            return render(request,'blog/subarticle.html',context={"form":form})
+    else:
+        form = Subarticle()
+        return render(request,'blog/subarticle.html',context={"form":form})
+def login_blog(request):
+    if request.method == "POST":
         uf = Login(request.POST)
-        print uf
         if uf.is_valid():
-            print "dfafafafaa"
-            username = uf.cleaned_data['user_name']
-            passwd = uf.cleaned_data['pass_wd']
-            user = User.objects.filter(user_name = username)
-            print user
+            username = uf.cleaned_data['username']
+            passwd = uf.cleaned_data['password']
+            user = authenticate(username=username, password=passwd)
+            #user = User.objects.filter(username = username)
             if user:
-                passwd = User.objects.filter(user_name = username,pass_wd = passwd)
-                if passwd:
-                    return redirect('/blog/')
+                #passwd = User.objects.filter(username = username,passorwd = passwd)
+                login(request,user)
+                return redirect('/blog/')
             else:
                 info = '登录失败，请检查用户名和密码！'
                 messages.add_message(request,messages.WARNING,info)
-                return render(request,'blog/login.html',context={"info":info})
+                return render(request,'blog/login.html',context={"uf":uf})
         else:
-            info = '登录失败，请检查用户名和密码！'
+            info = '登录失败'
             messages.add_message(request,messages.WARNING,info)
-            return render(request,'blog/login.html',context={"info":info})
+            return render(request,'blog/login.html',context={"uf":uf})
+        #return HttpResponseRedirect(reverse("blog:login"))
     else:
-        log = Login()
-        info = '登录失败，请检查用户名和密码！'
-        return render(request,'blog/login.html',context={"info":info})
+        login = Login()
+        return render(request,'blog/login.html',context={"login":login})
 
 def register(request):
-    if request.method == "POST":
-        res = Register(request.POST)
-        if res.is_valid():
-            username = res.cleaned_data['user_name']
-            passwd = res.cleaned_data['pass_wd']
-            user = User.objects.filter(user_name=username)
-            if len(user) == 1:
-                info = "用户已经存在！"
-                messages.add_message(request,messages.WARNING,info)
-                return render(request,'blog/register.html',{'info':info})
-            else:
-                user = User.objects.create(user_name = username,pass_wd = passwd)
-                user.save()
-                return redirect('/blog/')
+    if request.method == 'POST':
+        user_form = Register(request.POST)
+        if user_form.is_valid():
+            user = user_form.save(commit = False)
+            user.set_password(user_form.cleaned_data['password'])
+            user.save()
+            return HttpResponseRedirect(reverse("blog:login"))
+        else:
+            return HttpResponse("注册失败")
     else:
-        res = Register()
-        info = "注册失败，请重新注册"
-    return render(request,"blog/register.html",{"res":res})
+        user_form = Register()
+        return render(request,"blog/register.html",{"form":user_form})
 
 

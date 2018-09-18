@@ -1,24 +1,25 @@
 {% extends 'base.html' %}
 
 {% block main %}
-                        <form  method="post" class="comment-form">
+                       <form  method="post" action="{% url "blog:sub_article" %}" enctype="multipart/form-data">
                           {% csrf_token %}
-                          <div class="row">
-                            <div class="col-md-4">
-                              <label>标题：<input type="text" name="title" /></label>
+                            <div align="center">
+                             <label for="{{ form.title.id_for_label }}"></label>
+                                {{ form.title }}
                             </div>
-                            <div class="col-md-4">
-                              <label >分类：<input type="text" name="cate" /></label>
+                            <div align="center">
+                             <label for="{{ form.category.id_for_label }}">分类：</label>
+                                {{ form.category }}
                             </div>
-
-                                  <div class="col-md-4">
-                              <label >标签：<input type="text" name="tag" /></label>
+                                  <div align="center">
+                              <label for="{{ form.tags.id_for_label }}">标签：</label>
+                                      {{ form.tags }}
                             </div>
-                              <div class="col-md-12">
-                              <label >正文：<input type="text" name="body" /></label>
+                              <div align="center">
+                               <label for="{{ form.body.id_for_label }}"></label>
+                                  {{ form.body }}
                                    <button type="submit" class="btn btn-primary">发表</button>
                             </div>
-                          </div>    <!-- row -->
                         </form>
 {% endblock main %}
 {% block toc %}

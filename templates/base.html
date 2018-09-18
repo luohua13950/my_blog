@@ -43,8 +43,12 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li class="cl-effect-11"><a href={% url 'blog:index' %} data-hover="首页">首页</a></li>
                             <li class="cl-effect-11"><a href={% url 'blog:sub_article' %} data-hover="发布文章">发布文章</a></li>
-                            <li class="cl-effect-11"><a href={% url 'blog:login' %} data-hover="我的博客">我的博客</a></li>
-                            <li class="cl-effect-11"><a href="#" data-hover="联系">联系</a></li>
+                            {% if user.is_authenticated %}
+                                <li class="cl-effect-11"><a href=#>{{ user.username }}</a></li>
+                                <li class="cl-effect-11"><a href={% url 'blog:user_logout' %}>退出</a></li>
+                            {% else %}
+                            <li class="cl-effect-11"><a href={% url 'blog:login' %} data-hover="登录">登录</a></li>
+                            {% endif %}
                         </ul>
                     </div><!-- /.navbar-collapse -->
                 </nav>

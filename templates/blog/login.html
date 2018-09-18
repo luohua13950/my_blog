@@ -4,7 +4,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>博客</title>
+    <title>登录</title>
     <style>
 
 </style>
@@ -20,7 +20,7 @@
  <div class="middle-box fadeInDown animated text-center center">
              <div>
 
-                <h1 class="logo-name">HL</h1>
+                <h1 class="logo-name"></h1>
 
             </div>
     <h3>博客</h3>
@@ -28,8 +28,14 @@
 <form method = 'post' enctype="multipart/form-data">
 
     {% csrf_token %}
-    <label >用户名：<input type="text" name="user_name" /></label>
-    <label >密码：<input type="password" name="pass_wd" /></label>
+    <div align="center">
+    <label for="{{ uf.username.id_for_label }}">用户名：</label>
+        {{ uf.username }}
+    </div>
+    <div align="center">
+    <label  for="{{ uf.password.id_for_label }}">密码：</label>
+        {{ uf.password }}
+    </div>
   <button type="submit" class="btn btn-primary block full-width m-b">登录</button>
     {% if messages %}
     <ul class="messages">
