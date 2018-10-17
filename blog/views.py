@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+import markdown
 # Create your views here.
 app_name = 'blog'
 class Index(ListView):
@@ -28,6 +29,12 @@ def detail(request,pk):
     post.auto_increase_view()
     form = CommentForm()
     comment_list = post.comment_set.all()
+    post.body = markdown.markdown(post.body,
+                                  extensions=[
+                                      'markdown.extensions.extra',
+                                      'markdown.extensions.codehilite',
+                                      'markdown.extensions.toc',]
+                                  )
     context = {"form":form,"post":post,"comment_list":comment_list,"comment_count":post.comment_set.count()}
     return render(request,'blog/detail.html', context =context)
 
@@ -38,7 +45,8 @@ def category(request,pk):
     cate = get_object_or_404(Category,pk=pk)
     post_list = Post.objects.filter(category = cate).order_by('-create_time')
     return render(request,'blog/index.html',context={'post_list':post_list})
-@login_required(login_url='/blog/login/')
+
+@login_required(login_url='/login/')
 def sub_article(request):
     user = User.objects.get(username = 'root')
     #这里需要保存用户名
@@ -61,6 +69,19 @@ def sub_article(request):
     else:
         form = Subarticle()
         return render(request,'blog/subarticle.html',context={"form":form})
+
+def user_space(request):
+    post_list = Post.objects.filter(author = request.user).order_by('-create_time')
+    return render(request,"blog/userspace.html",{'post_list':post_list})
+from django.db.models import Q
+def search(request):
+    req = request.GET.get('q')
+    err_msg = ''
+    if not req:
+        err_msg='请输入关键字'
+        return render(request,'blog/index.html',{'err_msg':err_msg})
+    post_list = Post.objects.filter(Q(title__icontains=req)|Q(body__icontains=req))
+    return render(request,'blog/index.html',{'post_list':post_list,'err_msg':err_msg})
 def login_blog(request):
     if request.method == "POST":
         uf = Login(request.POST)
@@ -72,7 +93,8 @@ def login_blog(request):
             if user:
                 #passwd = User.objects.filter(username = username,passorwd = passwd)
                 login(request,user)
-                return redirect('/blog/')
+                url = reverse('blog:user_space')
+                return redirect(url)
             else:
                 info = '登录失败，请检查用户名和密码！'
                 messages.add_message(request,messages.WARNING,info)

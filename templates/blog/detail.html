@@ -3,18 +3,18 @@
 {% block main %}
 <article class="post post-{{ post.pk }}">
   <header class="entry-header">
-    <h1 class="entry-title">{{ post.title }}</h1>
+    <h1 class="entry-title"><p class="text-danger">{{ post.title }}</p></h1>
     <div class="entry-meta">
       <span class="post-category"><a href={% url 'blog:category' post.pk %}>{{ post.category.name }}</a></span>
       <span class="post-date"><a href="#"><time class="entry-date"
-                                                datetime="{{ post.create_time }}">{{ post.create_time }}</time></a></span>
-      <span class="post-author"><a href="#">{{ post.author }}</a></span>
+                                                datetime="{{ post.create_time|date:'Y年m月d日 H:i:s' }}">发表于{{ post.create_time|date:'Y年m月d日 H:i:s'}}</time></a></span>
+      <span class="post-author"><a href="#"  color="red">{{ post.author }}</a></span>
       <span class="comments-link"><a href="#">{{ comment_count }} 评论</a></span>
       <span class="views-count"><a href="#">{{ post.view }} 阅读</a></span>
     </div>
   </header>
   <div class="entry-content clearfix">
-    {{ post.body }}
+    {{ post.body |safe}}
   </div>
 </article>
                 <section class="comment-area" id="comment-area">
@@ -57,7 +57,7 @@
                             {% for comment in comment_list %}
                             <li class="comment-item">
                                 <span class="nickname">{{ comment.name }}</span>
-                                <time class="submit-date">{{ comment.create_time }}</time>
+                                <time class="submit-date">{{ comment.create_time|date:'Y年m月d日 H:i:s ' }}</time>
                                 <div class="text">
                                     {{ comment.text }}
                                 </div>

@@ -13,5 +13,7 @@ urlpatterns = [
     url(r'^login/$',auth_views.login,name = 'login'),
     url(r'^login/$',auth_views.login,{"template_name": "registration/login.html"}),
     url(r'^register/$',views.register,name = 'register'),
-    url(r'logout/$',auth_views.logout,name = 'user_logout')
+    url(r'logout/$',auth_views.logout,name = 'user_logout'),
+    url(r'^userspace/$',views.user_space,name = 'user_space'),
+    url(r'^search/$',views.search,name='search')
 ]

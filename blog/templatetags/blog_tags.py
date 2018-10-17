@@ -15,3 +15,7 @@ def get_categorys():
 @register.simple_tag
 def get_tag():
     return Tag.objects.annotate(num_count=Count('post')).filter(num_count__gt=0)
+
+@register.simple_tag
+def hot_article(num=5):
+    return Post.objects.all().order_by('-view')[:num]

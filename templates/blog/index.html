@@ -1,24 +1,27 @@
 {% extends 'base.html' %}
 {% block main %}
+    {% if err_msg %}
+        <p>{{ err_msg }}</p>
+    {% endif %}
                     {% for post in post_list %}
                     <article class="post post-{{ post.pk }}">
                         <header class="entry-header">
                             <h1 class="entry-title">
-                                <a href="{{ post.absolute_url }}">{{ post.title }}</a>
+                                <a href="{{ post.absolute_url }}" class="text-danger"><strong>{{ post.title }}</strong></a>
                             </h1>
                             <div class="entry-meta">
                                 <span class="post-category"><a href="#">{{ post.category.name }}</a></span>
                                 <span class="post-date"><a href="#"><time class="entry-date"
-                                                                          datetime={{ create_time }}>{{ create_time }}</time></a></span>
-                                <span class="post-author"><a href="#">{{ post.author }}</a></span>
+                                                                          datetime={{ create_time|date:'Y年m月d日 H:i:s' }}>{{ create_time|date:'Y年m月d日 H:i:s' }}</time></a></span>
+                                <span class="post-author"><a href={% url 'blog:user_space' %}>{{ post.author }}</a></span>
                                 <span class="comments-link"><a href="#">{{ post.comment_set.count }} 评论</a></span>
                                 <span class="views-count"><a href="#">{{ post.view }} 阅读</a></span>
                             </div>
                         </header>
                         <div class="entry-content clearfix">
-                            <p>{{ post.body|truncatechars:54 }}</p>
+                            <p class="text-info">{{ post.body|truncatechars:54 }}</p>
                             <div class="read-more cl-effect-14">
-                                <a href="{{ post.absolute_url }}" class="more-link">继续阅读 <span class="meta-nav">→</span></a>
+                                <a href="{{ post.absolute_url }}" class="more-link" >继续阅读 <span class="meta-nav">→</span></a>
                             </div>
                         </div>
                     </article>
