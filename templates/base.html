@@ -9,7 +9,7 @@
     <!-- meta -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    {% block css %}
     <!-- css -->
     <link rel="stylesheet" href={% static "blog/css/bootstrap.min.css" %}>
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
@@ -21,6 +21,7 @@
     <script src={% static "blog/js/bootstrap.min.js" %}></script>
     <script src={% static "blog/js/pace.min.js" %}></script>
     <script src={% static "blog/js/modernizr.custom.js" %}></script>
+{% endblock css %}
 </head>
 
 <body>
@@ -44,13 +45,15 @@
 
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
-                            <li class="cl-effect-11"><a href={% url 'blog:index' %} data-hover="首页">首页</a></li>
-                            <li class="cl-effect-11"><a href={% url 'blog:sub_article' %} data-hover="发布文章">发布文章</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'blog:index' %}" data-hover="首页">首页</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'blog:sub_article' %}" data-hover="发布文章" target="_blank">发布文章</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'resource:all_resoucre' %}" data-hover="资源下载">资源下载</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'advise:advise' %}" data-hover="优化和建议">优化和建议</a></li>
                             {% if user.is_authenticated %}
-                                <li class="cl-effect-11"><a  href="{% url 'blog:user_space' %}" class="text-success" ><strong>{{ user.username }}</strong></a></li>
+                                <li class="cl-effect-11"><a  href="{% url 'blog:user_space' %}" class="text-success"     ><strong>{{ user.username }}</strong></a></li>
                                 <li class="cl-effect-11"><a href={% url 'blog:user_logout' %}>退出</a></li>
                             {% else %}
-                            <li class="cl-effect-11"><a href={% url 'blog:login' %} data-hover="登录">登录</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'blog:login' %}" data-hover="登录">登录</a></li>
                             {% endif %}
                         </ul>
                     </div><!-- /.navbar-collapse -->
@@ -59,7 +62,7 @@
                     <a id="search-menu" href="#"><span id="search-icon" class="ion-ios-search-strong"></span></a>
                     <div id="search-form" class="search-form">
                         <form role="search" method="get" id="searchform" action={% url "blog:search" %}>
-                            <input type="search" placeholder="搜索" required name="q">
+                            <input type="search" placeholder="文章搜索" required name="q">
                             <button type="submit"><span class="ion-ios-search-strong"></span></button>
                         </form>
                     </div>
@@ -80,7 +83,7 @@
                {% block toc %}
                 {% endblock toc %}
             <div class="widget widget-recent-posts">
-                    <h3 class="widget-title">最新文章</h3>
+                    <h3 class="widget-title"><a href="{% url 'blog:recent_post' %}">最新文章</a></h3>
                     {% get_recent_psots as recent_post_list %}
                     <ul>
                         {% for post in recent_post_list %}
@@ -93,7 +96,7 @@
                     </ul>
                 </div>
                         <div class="widget widget-recent-posts">
-                    <h3 class="widget-title">热门文章</h3>
+                    <h3 class="widget-title"><a href="{% url 'blog:all_hot' %}">热门文章</a></h3>
                         {% hot_article as hot_list %}
                     <ul>
                         {% for hot in hot_list %}
@@ -170,9 +173,9 @@
     <nav>
         <ul>
             <li><a href="blog/index.html">首页</a></li>
-            <li><a href="blog/full-width.html">博客</a></li>
-            <li><a href="blog/about.html">关于</a></li>
-            <li><a href="blog/contact.html">联系</a></li>
+            <li><a href="{% url 'blog:sub_article' %}">发布文章</a></li>
+            <li><a href="{% url 'resource:all_resoucre' %}">资源下载</a></li>
+            <li><a href="{% url 'blog:login' %}">登录</a></li>
         </ul>
     </nav>
 </div>

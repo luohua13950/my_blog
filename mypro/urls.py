@@ -20,5 +20,7 @@ import settings
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'',include("blog.urls")),
-    url(r'^comment/',include("comments.urls"))
+    url(r'^comment/',include("comments.urls")),
+    url(r'',include("resource.urls")),
+    url(r'',include("advise.urls"))
 ]

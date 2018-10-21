@@ -1,0 +1,50 @@
+{% extends 'res_base.html' %}
+{% block logo %}
+    {% if msg %}
+        <h1>{{ msg }}</h1>
+    {% endif %}
+{% endblock logo %}
+{% block main %}
+    {% if err_msg %}
+        <p class="text-success"><h2>{{ err_msg }}</h2></p>
+    {% endif %}
+                    {% for post in post_list %}
+                    <article class="post post-{{ post.pk }}">
+                        <header class="entry-header">
+                            <h1 class="entry-title">
+                                <a href="#" class="text-danger"><strong>{{ post.res_name }}</strong></a>
+                            </h1>
+                            <div class="entry-meta">
+                                <span class="post-category"><a href="{% url 'resource:resoucer_cate' post.cate.pk %}">{{ post.cate.cate_name }}</a></span>
+                                <span class="post-date"><a href="#"><time class="entry-date"
+                                                                          datetime={{ create_time|date:'Y年m月d日 H:i:s' }}>{{ post.create_time|date:'Y年m月d日 H:i:s' }}</time></a></span>
+                                <span class="post-author"><a href={% url 'blog:user_space' %}>{{ post.upload_user }}</a></span>
+                                <span class="views-count"><a href="#">{{ post.download }} 阅读</a></span>
+                            </div>
+                        </header>
+                        <div class="entry-content clearfix">
+                            <div class="read-more cl-effect-14">
+                                <a href="{{ post.absolute_url }}" class="more-link" >继续阅读 <span class="meta-nav">→</span></a>
+                            </div>
+                        </div>
+                    </article>
+                    {% empty %}
+                        {% if post_msg %}
+                        <div class="no-post">暂无文章</div>
+                        {% endif %}
+                {% endfor %}
+        {% if is_paginated %}
+            <div class="pagination-simple">
+  <!-- 如果当前页还有上一页，显示一个上一页的按钮 -->
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+  {% endif %}
+  <!-- 显示当前页面信息 -->
+  <span class="current">第 {{ page_obj.number }} 页 / 共 {{ paginator.num_pages }} 页</span>
+  <!-- 如果当前页还有下一页，显示一个下一页的按钮 -->
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,161 @@
+{% load staticfiles %}
+{% load res_tags %}
+{% load blog_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% block titile %}
+        <title>资源下载</title>
+    {% endblock titile %}
+    <!-- meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- css -->
+    <link rel="stylesheet" href={% static "blog/css/bootstrap.min.css" %}>
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href={% static "blog/css/pace.css" %}>
+    <link rel="stylesheet" href={% static "blog/css/custom.css" %}>
+    <link rel="stylesheet" href={% static "blog/css/highlights/github.css" %}>
+    <!-- js -->
+    <script src={% static "blog/js/jquery-2.1.3.min.js" %}></script>
+    <script src={% static "blog/js/bootstrap.min.js" %}></script>
+    <script src={% static "blog/js/pace.min.js" %}></script>
+    <script src={% static "blog/js/modernizr.custom.js" %}></script>
+</head>
+
+<body>
+<div class="container">
+    <header id="site-header">
+        <div class="row">
+            <div class="col-md-4 col-sm-5 col-xs-8">
+                {% block logo %}
+                <div class="logo">
+                    <h1><a href="#"><b>资源管理</b></a></h1>
+                </div>
+                {% endblock logo %}
+            </div><!-- col-md-4 -->
+            <div class="col-md-8 col-sm-7 col-xs-4">
+                <nav class="main-nav" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" id="trigger-overlay" class="navbar-toggle">
+                            <span class="ion-navicon"></span>
+                        </button>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="cl-effect-11"><a href="{% url 'blog:index' %}" data-hover="首页">首页</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'blog:sub_article' %}" data-hover="发布文章" target="_blank">发布文章</a></li>
+                            <li ><a href="{% url 'resource:upload' %}" data-hover="资源下载" >上传资源</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'advise:advise' %}" data-hover="优化和建议">优化和建议</a></li>
+                            {% if user.is_authenticated %}
+                                <li class="cl-effect-11"><a  href="{% url 'blog:user_space' %}" class="text-success"     ><strong>{{ user.username }}</strong></a></li>
+                                <li class="cl-effect-11"><a href="{% url 'blog:user_logout' %}" data-hover="退出">退出</a></li>
+                            {% else %}
+                            <li class="cl-effect-11"><a href="{% url 'blog:login' %}" data-hover="登录">登录</a></li>
+                            {% endif %}
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </nav>
+                <div id="header-search-box">
+                    <a id="search-menu" href="#"><span id="search-icon" class="ion-ios-search-strong"></span></a>
+                    <div id="search-form" class="search-form">
+                        <form role="search" method="get" id="searchform" action={% url "resource:search_res" %}>
+                            <input type="search" placeholder="资源搜索" required name="q">
+                            <button type="submit"><span class="ion-ios-search-strong"></span></button>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- col-md-8 -->
+        </div>
+    </header>
+</div>
+
+<div class="content-body">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8">
+               {% block main %}
+               {% endblock main %}
+            </main>
+            <aside class="col-md-4">
+               {% block toc %}
+                {% endblock toc %}
+            <div class="widget widget-recent-posts">
+                    <h3 class="widget-title"><a href="#">最新资源</a></h3>
+                    {% get_recent_res as recent_post_list %}
+                    <ul>
+                        {% for post in recent_post_list %}
+                        <li>
+                            <a href="{% url 'resource:download' post.pk%}" class="text-success"><strong>{{ post.res_name }}</strong></a>
+                        </li>
+                    {% empty %}
+                            暂无资源
+                        {% endfor %}
+                    </ul>
+                </div>
+                        <div class="widget widget-recent-posts">
+                    <h3 class="widget-title"><a href="#">热门资源</a></h3>
+                        {% hot_resoucre as hot_list %}
+                    <ul>
+                        {% for hot in hot_list %}
+                        <li>
+                            <a href="{% url 'resource:download' hot.pk%}" class="text-danger"><strong>{{ hot.res_name }}</strong></a>
+                        </li>
+                    {% empty %}
+                            暂无资源
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="widget widget-category">
+                    <h3 class="widget-title"><a href="#">分类</a></h3>
+                {% res_cateforys as cate_list %}
+                    <ul>
+                        {% for cate in cate_list %}
+                        <li>
+                            <a href="{% url 'resource:resoucer_cate' cate.pk %}">{{ cate.cate_name }} <span class="post-count">{{ cate.num_count}}篇</span></a>
+                        </li>
+                        {% empty %}
+                            暂无分类
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="widget widget-tag-cloud">
+                    <h3 class="widget-title">标签云</h3>
+                    {% get_tag as tag_list %}
+                    {% for tag in tag_list %}
+                    <ul>
+                        <li>
+                            <a href="#">{{ tag.name }}</a>
+                        </li>
+                        {% empty %}
+                        暂无标签
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="rss">
+                    <a href=""><span class="ion-social-rss-outline"></span> 其它</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer id="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="copyright">以上资源如有侵犯到您的版权，请留言，本站将及时删除，给您带来的不便请谅解！<a href="{% url "advise:advise" %}" class="text-primary">点此留言</a>
+
+                </p>
+                <p class="text-center">&copy 2018 -@copyright 从今天开始种树</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<script src={% static "blog/js/script.js" %}></script>
+
+</body>
+</html>

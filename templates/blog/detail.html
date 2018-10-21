@@ -7,7 +7,7 @@
     <div class="entry-meta">
       <span class="post-category"><a href={% url 'blog:category' post.pk %}>{{ post.category.name }}</a></span>
       <span class="post-date"><a href="#"><time class="entry-date"
-                                                datetime="{{ post.create_time|date:'Y年m月d日 H:i:s' }}">发表于{{ post.create_time|date:'Y年m月d日 H:i:s'}}</time></a></span>
+                                                datetime="{{ post.create_time|date:'Y年m月d日 H:i:s' }}">发布于{{ post.create_time|date:'Y年m月d日 H:i:s'}}</time></a></span>
       <span class="post-author"><a href="#"  color="red">{{ post.author }}</a></span>
       <span class="comments-link"><a href="#">{{ comment_count }} 评论</a></span>
       <span class="views-count"><a href="#">{{ post.view }} 阅读</a></span>

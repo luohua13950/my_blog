@@ -48,28 +48,28 @@ def category(request,pk):
 
 @login_required(login_url='/login/')
 def sub_article(request):
-    user = User.objects.get(username = 'root')
     #这里需要保存用户名
     time = timezone.localtime(timezone.now()).strftime("%Y-%m-%d %H:%M:%S")
-    if not request.user:
-        user.username = 'root'
-        user.save()
-    user.last_login = time
-    if request.method == "POST":
-        form = Subarticle(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author =request.user
-            post.create_time = time
-            post.modify_time = time
-            post.save()
-            return redirect(post.absolute_url())
+    super = User.objects.get(username=request.user)
+    if super.is_superuser ==1:
+        if request.method == "POST":
+            form = Subarticle(request.POST)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.author =request.user
+                post.create_time = time
+                post.modify_time = time
+                post.save()
+                return redirect(post.absolute_url())
+            else:
+                return render(request,'blog/subarticle.html',context={"form":form})
         else:
+            form = Subarticle()
             return render(request,'blog/subarticle.html',context={"form":form})
     else:
-        form = Subarticle()
-        return render(request,'blog/subarticle.html',context={"form":form})
-
+        err_msg='你没有权限发布文章，如需发布，请联系管理员添加权限!'
+        post_msg = ''
+        return render(request,'blog/index.html',{'err_msg':err_msg,'post_msg':post_msg})
 def user_space(request):
     post_list = Post.objects.filter(author = request.user).order_by('-create_time')
     return render(request,"blog/userspace.html",{'post_list':post_list})
@@ -78,10 +78,30 @@ def search(request):
     req = request.GET.get('q')
     err_msg = ''
     if not req:
-        err_msg='请输入关键字'
+        err_msg='未找到%s相关文章' %req
         return render(request,'blog/index.html',{'err_msg':err_msg})
     post_list = Post.objects.filter(Q(title__icontains=req)|Q(body__icontains=req))
     return render(request,'blog/index.html',{'post_list':post_list,'err_msg':err_msg})
+
+def all_hot(request):
+    post_list = Post.objects.all().order_by('-view')
+    msg = '按阅读量排序'
+    return render(request,'blog/index.html',{'post_list':post_list,'msg':msg})
+def recent_post(request):
+    post_list = Post.objects.all().order_by('-create_time')
+    msg = '按发布时间排序'
+    pagin= Paginator(post_list,6)
+    page_obj = pagin.page(1)
+    return render(request,'blog/index.html',{'post_list':post_list,'msg':msg,'page_obj':page_obj})
+
+
+
+
+
+
+
+
+
 def login_blog(request):
     if request.method == "POST":
         uf = Login(request.POST)

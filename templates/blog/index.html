@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
+{% block logo %}
+    {% if msg %}
+        <h1>{{ msg }}</h1>
+    {% endif %}
+{% endblock logo %}
 {% block main %}
     {% if err_msg %}
-        <p>{{ err_msg }}</p>
+        <p class="text-success"><h2>{{ err_msg }}</h2></p>
     {% endif %}
                     {% for post in post_list %}
                     <article class="post post-{{ post.pk }}">
@@ -10,9 +15,9 @@
                                 <a href="{{ post.absolute_url }}" class="text-danger"><strong>{{ post.title }}</strong></a>
                             </h1>
                             <div class="entry-meta">
-                                <span class="post-category"><a href="#">{{ post.category.name }}</a></span>
+                                <span class="post-category"><a href="{% url 'blog:category' post.category.pk %}">{{ post.category.name }}</a></span>
                                 <span class="post-date"><a href="#"><time class="entry-date"
-                                                                          datetime={{ create_time|date:'Y年m月d日 H:i:s' }}>{{ create_time|date:'Y年m月d日 H:i:s' }}</time></a></span>
+                                                                          datetime={{ create_time|date:'Y年m月d日 H:i:s' }}>{{ post.create_time|date:'Y年m月d日 H:i:s' }}</time></a></span>
                                 <span class="post-author"><a href={% url 'blog:user_space' %}>{{ post.author }}</a></span>
                                 <span class="comments-link"><a href="#">{{ post.comment_set.count }} 评论</a></span>
                                 <span class="views-count"><a href="#">{{ post.view }} 阅读</a></span>
@@ -26,7 +31,9 @@
                         </div>
                     </article>
                     {% empty %}
-                        <div class="no-post">暂无文章,欢迎大家添加</div>
+                        {% if post_msg %}
+                        <div class="no-post">暂无文章</div>
+                        {% endif %}
                 {% endfor %}
         {% if is_paginated %}
             <div class="pagination-simple">

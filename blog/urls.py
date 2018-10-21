@@ -15,5 +15,7 @@ urlpatterns = [
     url(r'^register/$',views.register,name = 'register'),
     url(r'logout/$',auth_views.logout,name = 'user_logout'),
     url(r'^userspace/$',views.user_space,name = 'user_space'),
-    url(r'^search/$',views.search,name='search')
+    url(r'^search/$',views.search,name='search'),
+    url(r'^allhot/$',views.all_hot,name='all_hot'),
+    url(r'^recent/$',views.recent_post,name='recent_post')
 ]
