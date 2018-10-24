@@ -1,16 +1,24 @@
 {% extends 'res_base.html' %}
 {% load blog_tags %}
+    {% block logo %}
+        <div class="logo">
+            <h1><b>{{ general }}</b></h1>
+        </div>
+    {% endblock logo %}
 {% block main %}
         {% if err_msg %}
         <p>{{ err_msg }}</p>
         {% endif %}
+          {% if post_msg %}
+              <p class="text-center"><strong>一共找到以下{{ res_list|length }}个资源</strong></p>
+            {% endif %}
                     {% for res in res_list %}
                         <header class="entry-header">
                             <h1 class="entry-title">
                                 <a href={% url 'resource:download' res.pk %} class="text-danger"><strong>{{ res.res_name }}</strong></a>
                             </h1>
                             <div class="entry-meta">
-                                <span ><a href="#">类型:{{res.cate }}</a></span>
+                                <span ><a href="{% url 'resource:resoucer_cate' res.cate.pk %}">类型:{{res.cate }}</a></span>
                                 <span class="post-date"><a href="#"><time class="entry-date"
                                                                           >该资源由{{res.upload_user }}上传于{{ res.create_time|date:'Y年m月d日 H:i:s' }}</time></a></span>
                                 <span ><a href="#">下载量:{{ res.download}} </a></span>
@@ -20,18 +28,27 @@
                     {% empty %}
                         <div class="no-post">暂无可下载资源,欢迎大家添加</div>
                 {% endfor %}
-        {% if is_paginated %}
-            <div class="pagination-simple">
+{% if paginator %}
+    <div class="pagination-simple">
+
   <!-- 如果当前页还有上一页，显示一个上一页的按钮 -->
-  {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+  {% if res_list.has_previous %}
+    <a href="{% url "resource:all_resoucre"  res_list.previous_page_number  %}">上一页</a>
+  {% endif %}
+                {% for p in res_list.paginator.page_range %}
+                {% if p == res_list.number %}
+                    {{ p }}
+                {% else %}
+                <a href="{% url "resource:all_resoucre" p%}">{{ p }}</a>
+                {% endif %}
+            {% endfor %}
+        {% if res_list.has_next %}
+    <a href=" {% url "resource:all_resoucre" res_list.next_page_number %} ">下一页</a>
   {% endif %}
   <!-- 显示当前页面信息 -->
-  <span class="current">第 {{ page_obj.number }} 页 / 共 {{ paginator.num_pages }} 页</span>
+  <span class="current">第 {{ res_list.number }} 页 / 共 {{ paginator.num_pages }} 页</span>
   <!-- 如果当前页还有下一页，显示一个下一页的按钮 -->
-  {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">下一页</a>
-  {% endif %}
+
 </div>
-{% endif %}
+    {% endif %}
 {% endblock %}

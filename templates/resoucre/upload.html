@@ -8,13 +8,13 @@
         {% if err_msg %}
         <p class="text-danger">{{ err_msg }}</p>
         {% endif %}
-<form method="post" action="#" enctype="multipart/form-data">
+<form method="post" action="{% url "resource:upload" %}" enctype="multipart/form-data">
     {% csrf_token %}
          <div style = "max-width:470px;">
              <label for="{{ form.file.id_for_label }}">您要上传的文件：</label>
         {{ form.file }}
              </br>
-             <lable for="{{ form.cate.id_for_label }}" >该文件的分类：</lable>
+             <lable for="{{ form.cate.id_for_label }}" ></lable>
              {{ form.cate }}
          </div>
          <br>

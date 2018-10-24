@@ -1,23 +1,41 @@
-
-{% block title %}Login{% endblock %}
-{% block content %}
-<div class="row text-center vertical-middle-sm">
-	<h1>Login</h1>
-	<p>Input your username and password</p>
-	<form class="form-horizontal" method="post">
-		{% csrf_token %}
-		<!-- {{ form.as_p }} -->
-		<div class="form-group">
-			<label for="{{ form.username.id_for_label }}" class="col-md-5 control-label" style="color:red"><span class="glyphicon glyphicon-user"></span>Username</label>
-			<div class="col-md-6 text-left">{{ form.username }}</div>
-		</div>
-		<div class="form-group">
-			<label for="{{ form.password.id_for_label }}" class="col-md-5 control-label" style="color:blue"><span class="glyphicon glyphicon-floppy-open"></span>Password</label>
-			<div class="col-md-6 text-left">{{ form.password }}</div>
-		</div>
-		<input type="submit" value="Login">
-	</form>
-    <p style="margin-top:10px">Forgot your password? <a href="#">reset password</a></p>
-    <p style="margin-top:10px">If you had not a username, <a href="#">Register to be a user</a>, please</p>
-</div>
-{% endblock %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>用户登录</title>
+        <link rel="stylesheet" href={% static "blog/css/bootstrap.min.css" %} />
+        <link rel="stylesheet" href={% static "blog/css/style.css" %} />
+        <script src={% static "blog/js/bootstrap.min.js" %}></script>
+    </head>
+    <body>
+        <form action="#" method="post">
+             {% csrf_token %}
+            <div class="mycenter">
+            <div class="mysign">
+                <div class="col-lg-11 text-center text-info">
+                    <h2>欢迎访问本站</h2>
+                </div>
+                <div class="col-lg-10">
+                    <label for="{{ uf.username.id_for_label }}">用户名：</label>
+                    {{ uf.username }}
+                </div>
+                <div class="col-lg-10"></div>
+                <div class="col-lg-10">
+                    <label  for="{{ uf.password.id_for_label }}">密码：</label>
+                            {{ uf.password }}
+                </div>
+                <div class="col-lg-10"></div>
+                <div class="col-lg-10 ">
+                    <p class="text-muted text-center"> <a href="#"><small>忘记密码了？</small></a> | <a href={% url 'blog:register' %}>注册一个新账号</a>
+    </p>
+                </div>
+                <div class="col-lg-10"></div>
+                <div class="col-lg-10">
+                    <button type="button" class="btn btn-success col-lg-12">登录</button>
+                </div>
+            </div>
+        </div>
+        </form>
+    </body>
+</html>

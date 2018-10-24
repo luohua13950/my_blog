@@ -83,7 +83,7 @@
                {% block toc %}
                 {% endblock toc %}
             <div class="widget widget-recent-posts">
-                    <h3 class="widget-title"><a href="#">最新资源</a></h3>
+                    <h3 class="widget-title"><a href="{% url "resource:recent_res" 1 %}">最新资源</a></h3>
                     {% get_recent_res as recent_post_list %}
                     <ul>
                         {% for post in recent_post_list %}
@@ -96,7 +96,7 @@
                     </ul>
                 </div>
                         <div class="widget widget-recent-posts">
-                    <h3 class="widget-title"><a href="#">热门资源</a></h3>
+                    <h3 class="widget-title"><a href="{% url "resource:hot_res" 1 %}">热门资源</a></h3>
                         {% hot_resoucre as hot_list %}
                     <ul>
                         {% for hot in hot_list %}
@@ -115,7 +115,7 @@
                     <ul>
                         {% for cate in cate_list %}
                         <li>
-                            <a href="{% url 'resource:resoucer_cate' cate.pk %}">{{ cate.cate_name }} <span class="post-count">{{ cate.num_count}}篇</span></a>
+                            <a href="{% url 'resource:resoucer_cate' cate.pk  %}">{{ cate.cate_name }} <span class="post-count">{{ cate.num_count}}篇</span></a>
                         </li>
                         {% empty %}
                             暂无分类

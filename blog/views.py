@@ -125,8 +125,8 @@ def login_blog(request):
             return render(request,'blog/login.html',context={"uf":uf})
         #return HttpResponseRedirect(reverse("blog:login"))
     else:
-        login = Login()
-        return render(request,'blog/login.html',context={"login":login})
+        uf = Login()
+        return render(request,'blog/login.html',context={"uf":uf})
 
 def register(request):
     if request.method == 'POST':

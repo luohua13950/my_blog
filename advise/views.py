@@ -8,7 +8,9 @@ from django.shortcuts import render
 from advise.models import Advise
 from advise.forms import MessageForm
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+@login_required(login_url='/login/')
 def message_info(request):
     message_list = Advise.objects.all()
     if request.method == "POST":
