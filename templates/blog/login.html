@@ -27,7 +27,8 @@
                 </div>
                 <div class="col-lg-10"></div>
                 <div class="col-lg-10 ">
-                    <p class="text-muted text-center"> <a href="#"><small>忘记密码了？</small></a> | <a href={% url 'blog:register' %}>注册一个新账号</a>
+                    <p class="text-muted text-center"> <a href="#"><small>忘记密码了？</small></a> |<a href="{% url "blog:mail_active" %}"><small>账号需要激活？</small></a> | <a href={% url 'blog:register' %}><small>注册一个新账号</small></a>
+    </p><a href="{% url "blog:mail_active" %}"><small>账号需要激活？</small></a> | <a href={% url 'blog:register' %}><small>注册一个新账号</small></a>
     </p>
                 </div>
                 <div class="col-lg-10"></div>

@@ -15,6 +15,10 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 import markdown
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import SignatureExpired
+from django.core.mail import send_mail
+from django.conf import settings
 # Create your views here.
 app_name = 'blog'
 class Index(ListView):
@@ -70,9 +74,11 @@ def sub_article(request):
         err_msg='你没有权限发布文章，如需发布，请联系管理员添加权限!'
         post_msg = ''
         return render(request,'blog/index.html',{'err_msg':err_msg,'post_msg':post_msg})
+@login_required(login_url='/login/')
 def user_space(request):
     post_list = Post.objects.filter(author = request.user).order_by('-create_time')
-    return render(request,"blog/userspace.html",{'post_list':post_list})
+    active = request.user.is_active
+    return render(request,"blog/userspace.html",{'post_list':post_list,'active':active})
 from django.db.models import Q
 def search(request):
     req = request.GET.get('q')
@@ -132,9 +138,26 @@ def register(request):
     if request.method == 'POST':
         user_form = Register(request.POST)
         if user_form.is_valid():
-            user = user_form.save(commit = False)
-            user.set_password(user_form.cleaned_data['password'])
+            username = request.POST.get('username')
+            email =request.POST.get('email')
+            password = request.POST.get('password')
+            user = User.objects.create_user(username,email,password)
+            user.is_active=0
             user.save()
+            #user = user_form.save(commit = False)
+            #user.set_password(user_form.cleaned_data['password'])
+            #user.save()
+            ser = Serializer(settings.SECRET_KEY,7200)
+            info = {'confirm':user.id}
+            res = ser.dumps(info)
+            res = res.decode()
+            #发邮件
+            subject = '从今天开始种树激活邮件'
+            msg = ''
+            html_msg ='<h1>%s,欢迎您成为今天开始种树会员</h1>请点击链接激活您的用户，激活后可任意下载资源<br/><a href = "http://127.0.0.1:8000/active/%s">http://127.0.0.1:8000/active/%s</a>' %(username,res,res)
+            sender = settings.EMAIL_FROM
+            email = [email]
+            send_mail(subject,msg,sender,email,html_message=html_msg)
             return HttpResponseRedirect(reverse("blog:login"))
         else:
             return HttpResponse("注册失败")
@@ -142,4 +165,38 @@ def register(request):
         user_form = Register()
         return render(request,"blog/register.html",{"form":user_form})
 
+def user_active(request,token):
+    #token = token.decode()
+    ser = Serializer(settings.SECRET_KEY,7200)
+    try:
+        res = ser.loads(token)
+        id = res['confirm']
+        user = User.objects.get(id =id)
+        user.is_active = 1
+        user.save()
+        return redirect(reverse('blog:login'))
+    except SignatureExpired as e:
+        return HttpResponse('激活链接已过期')
 
+def send_mail_to_active(request):
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        user = User.objects.get(username=username)
+        if user.is_active ==1:
+            err_msg = '此账号已激活，请直接登录'
+            return render(request,'blog/active.html',{'err_msg':err_msg})
+        ser = Serializer(settings.SECRET_KEY,7200)
+        info = {'confirm':user.id}
+        res = ser.dumps(info)
+        res = res.decode()
+        #发邮件
+        subject = '从今天开始种树激活邮件'
+        msg = ''
+        html_msg ='<h1>%s,欢迎您成为今天开始种树会员</h1>请点击链接激活您的用户，激活后可任意下载资源<br/><a href = "http://127.0.0.1:8000/active/%s">http://127.0.0.1:8000/active/%s</a>' %(user.username,res,res)
+        sender = settings.EMAIL_FROM
+        email = [user.email]
+        send_mail(subject,msg,sender,email,html_message=html_msg)
+        return HttpResponse('激活邮件已发送，请到邮箱激活！')
+    else:
+        return render(request,'blog/active.html')

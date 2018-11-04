@@ -23,6 +23,12 @@
                 <div class="col-lg-10">
                     <button  class="btn btn-success col-lg-12">发送激活邮件</button>
                 </div>
+                </br>
+                {% if err_msg %}
+                <div class="col-lg-10">
+                <p class="text-success">{{ err_msg }} <a href="{% url "blog:login" %}">点此直接登录</a></p>
+                    </div>
+                {% endif %}
             </div>
         </div>
         </form>

@@ -8,6 +8,9 @@
                 </div>
 {% endblock logo %}
 {% block main %}
+    {% if active  %}
+
+
                     {% for post in post_list %}
                     <article class="post post-{{ post.pk }}">
                         <header class="entry-header">
@@ -33,6 +36,9 @@
                     {% empty %}
                         <div class="no-post">您还未发表任何文章</div>
                 {% endfor %}
+    {% else %}
+        <a href="{% url "blog:mail_active" %}">您还不是激活会员，点击激活您的用户，以便下载更多资源！</a>
+     {% endif %}
         {% if is_paginated %}
             <div class="pagination-simple">
   <!-- 如果当前页还有上一页，显示一个上一页的按钮 -->
