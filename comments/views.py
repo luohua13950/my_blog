@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render,get_object_or_404,redirect,HttpResponseRedirect
 from blog.models import Post
-from models import Comment
+from .models import Comment
 from .forms import CommentForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required

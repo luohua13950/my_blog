@@ -19,6 +19,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired
 from django.core.mail import send_mail
 from django.conf import settings
+from untils.celery_task import send_register_active_email
 # Create your views here.
 app_name = 'blog'
 class Index(ListView):
@@ -158,6 +159,7 @@ def register(request):
             sender = settings.EMAIL_FROM
             email = [email]
             send_mail(subject,msg,sender,email,html_message=html_msg)
+            send_register_active_email.delay(email,username,res)
             return HttpResponseRedirect(reverse("blog:login"))
         else:
             return HttpResponse("注册失败")
@@ -191,12 +193,13 @@ def send_mail_to_active(request):
         res = ser.dumps(info)
         res = res.decode()
         #发邮件
-        subject = '从今天开始种树激活邮件'
-        msg = ''
-        html_msg ='<h1>%s,欢迎您成为今天开始种树会员</h1>请点击链接激活您的用户，激活后可任意下载资源<br/><a href = "http://127.0.0.1:8000/active/%s">http://127.0.0.1:8000/active/%s</a>' %(user.username,res,res)
-        sender = settings.EMAIL_FROM
+        # subject = '从今天开始种树激活邮件'
+        # msg = ''
+        # html_msg ='<h1>%s,欢迎您成为今天开始种树会员</h1>请点击链接激活您的用户，激活后可任意下载资源<br/><a href = "http://127.0.0.1:8000/active/%s">http://127.0.0.1:8000/active/%s</a>' %(user.username,res,res)
+        # sender = settings.EMAIL_FROM
         email = [user.email]
-        send_mail(subject,msg,sender,email,html_message=html_msg)
+        # send_mail(subject,msg,sender,email,html_message=html_msg)
+        send_register_active_email.delay(email,username,res)
         return HttpResponse('激活邮件已发送，请到邮箱激活！')
     else:
         return render(request,'blog/active.html')

@@ -137,8 +137,8 @@ MEDIA_URL='/media/'
 
 EMAIL_HOST = 'smtp.163.com'
 EMAIL_PORT = 25
-EMAIL_HOST_USER = '15901889707@163.com'
-EMAIL_HOST_PASSWORD = 'luohua13950'
+EMAIL_HOST_USER = 'happyhong_cn@163.com'
+EMAIL_HOST_PASSWORD = '1qaz2wsx'
 EMAIL_USE_TLS = False
 EMAIL_SUBJECT_PREFIX = u'[从今天开始种树]'
-EMAIL_FROM = u'从今天开始种树<15901889707@163.com>'
+EMAIL_FROM = u'从今天开始种树<happyhong_cn@163.com>'

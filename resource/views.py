@@ -5,9 +5,9 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import  redirect,render,get_object_or_404
 from  django.http import HttpResponse,FileResponse
-from forms import  UploadForm
+from .forms import  UploadForm
 from mypro import settings
-from models import Resource
+from .models import Resource
 import os,datetime
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
