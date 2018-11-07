@@ -115,7 +115,7 @@
                     <ul>
                         {% for cate in cate_list %}
                         <li>
-                            <a href="{% url 'resource:resoucer_cate' cate.pk  %}">{{ cate.cate_name }} <span class="post-count">{{ cate.num_count}}篇</span></a>
+                            <a href="{% url 'resource:resoucer_cate' cate.pk  %}">{{ cate.cate_name }} <span class="post-count">{{ cate.num_count}}个</span></a>
                         </li>
                         {% empty %}
                             暂无分类

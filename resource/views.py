@@ -15,6 +15,7 @@ from django.utils.encoding import escape_uri_path
 from django.db.models import Q
 from django.core.paginator import Paginator
 from .models import Cate
+from untils.celery_task import upload
 # Create your views here.
 PATH = "/home/luohua/upload/"
 @login_required(login_url='/login/')
@@ -31,15 +32,16 @@ def upload_file(request):
             tt = form.cleaned_data['cate']
             cate = Cate.objects.get(cate_name=tt)
             ff=request.FILES['file']
+            name = ff.name
             try:
-                name = ff.name
-                path = os.path.join('upload',name)
-                #path = os.path.join(PATH,name)
+                #path = os.path.join('upload',name)
+                path = os.path.join(PATH,name)
                 if not os.path.isfile(path):
                     #os.mkdir(settings.MEDIA_ROOT)
-                    with open(path,'wb+') as f:
-                        for chunk in ff.chunks():
-                            f.write(chunk)
+                    # with open(path,'wb+') as f:
+                    #     for chunk in ff.chunks():
+                    #         f.write(chunk)
+                    upload.delay(ff,path)
                     Resource.objects.create(res_name=ff.name,upload_url=path,upload_user=user,create_time=now_time,size=ff.size,cate=cate)
                 else:
                     err_msg = '此文件名的文件已被其它用户上传，如继续上传请更改文件名！'

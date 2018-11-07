@@ -157,9 +157,9 @@ def register(request):
             msg = ''
             html_msg ='<h1>%s,欢迎您成为今天开始种树会员</h1>请点击链接激活您的用户，激活后可任意下载资源<br/><a href = "http://127.0.0.1:8000/active/%s">http://127.0.0.1:8000/active/%s</a>' %(username,res,res)
             sender = settings.EMAIL_FROM
-            email = [email]
+            emails = [email]
             send_mail(subject,msg,sender,email,html_message=html_msg)
-            send_register_active_email.delay(email,username,res)
+            send_register_active_email.delay(emails,username,res)
             return HttpResponseRedirect(reverse("blog:login"))
         else:
             return HttpResponse("注册失败")
