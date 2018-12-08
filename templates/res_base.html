@@ -48,7 +48,7 @@
                             <li class="cl-effect-11"><a href="{% url 'blog:index' %}" data-hover="首页">首页</a></li>
                             <li class="cl-effect-11"><a href="{% url 'blog:sub_article' %}" data-hover="发布文章" target="_blank">发布文章</a></li>
                             <li ><a href="{% url 'resource:upload' %}" data-hover="资源下载" >上传资源</a></li>
-                            <li class="cl-effect-11"><a href="{% url 'advise:advise' %}" data-hover="优化和建议">优化和建议</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'knowledge:knowledge' 1%}" data-hover="知识图谱">知识图谱</a></li>
                             {% if user.is_authenticated %}
                                 <li class="cl-effect-11"><a  href="{% url 'blog:user_space' %}" class="text-success"     ><strong>{{ user.username }}</strong></a></li>
                                 <li class="cl-effect-11"><a href="{% url 'blog:user_logout' %}" data-hover="退出">退出</a></li>

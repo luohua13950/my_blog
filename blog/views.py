@@ -20,6 +20,9 @@ from itsdangerous import SignatureExpired
 from django.core.mail import send_mail
 from django.conf import settings
 from untils.celery_task import send_register_active_email
+# import sys
+# reload(sys)
+# sys.setdefaultencoding('utf8')
 # Create your views here.
 app_name = 'blog'
 class Index(ListView):

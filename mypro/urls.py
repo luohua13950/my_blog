@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'',include("blog.urls")),
     url(r'^comment/',include("comments.urls")),
     url(r'',include("resource.urls")),
-    url(r'',include("advise.urls"))
+    url(r'',include("advise.urls")),
+    url(r'',include("knowledge.urls"))
 ]

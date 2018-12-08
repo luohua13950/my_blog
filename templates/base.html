@@ -48,10 +48,12 @@
                             <li class="cl-effect-11"><a href="{% url 'blog:index' %}" data-hover="首页">首页</a></li>
                             <li class="cl-effect-11"><a href="{% url 'blog:sub_article' %}" data-hover="发布文章" target="_blank">发布文章</a></li>
                             <li class="cl-effect-11"><a href="{% url "resource:all_resoucre" 1 %}" data-hover="资源下载">资源下载</a></li>
-                            <li class="cl-effect-11"><a href="{% url 'advise:advise' %}" data-hover="优化和建议">优化和建议</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'knowledge:knowledge' 1%}" data-hover="知识图谱">知识图谱</a></li>
                             {% if user.is_authenticated %}
+
                                 <li class="cl-effect-11"><a  href="{% url 'blog:user_space' %}" class="text-success"     ><h3>{{ user.username }}</h3></a></li>
                                 <li class="cl-effect-11"><a href={% url 'blog:user_logout' %}>退出</a></li>
+
                             {% else %}
                             <li class="cl-effect-11"><a href="{% url 'blog:login' %}" data-hover="登录">登录</a></li>
                             {% endif %}
@@ -80,8 +82,7 @@
                {% endblock main %}
             </main>
             <aside class="col-md-4">
-               {% block toc %}
-                {% endblock toc %}
+
             <div class="widget widget-recent-posts">
                     <h3 class="widget-title"><a href="{% url 'blog:recent_post' %}">最新文章</a></h3>
                     {% get_recent_psots as recent_post_list %}
@@ -175,7 +176,7 @@
             <li><a href="blog/index.html">首页</a></li>
             <li><a href="{% url 'blog:sub_article' %}">发布文章</a></li>
             <li><a href="{% url "resource:all_resoucre" 1 %}">资源下载</a></li>
-             <li class="cl-effect-11"><a href="{% url 'advise:advise' %}" data-hover="优化和建议">优化和建议</a></li>
+             <li class="cl-effect-11"><a href="{% url 'knowledge:knowledge' 1%}" data-hover="知识图谱">知识图谱</a></li>
             <li><a href="{% url 'blog:login' %}">登录</a></li>
         </ul>
     </nav>

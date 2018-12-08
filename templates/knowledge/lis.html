@@ -1,0 +1,42 @@
+{% extends 'knowledgebase.html' %}
+{% load staticfiles %}
+{% block body %}
+<div class="line46"></div>
+
+<article>
+  <div class="leftbox">
+    <div class="newblogs">
+        {% if err_msg %}
+        <h2>{{ err_msg }}</h2>
+    {% endif %}
+        {% for p in page %}
+      <ul>
+        <li>
+          <h3 class="blogtitle"><a href="{% url "knowledge:details" p.pk %}" target="_blank" >{{ p.title }}</a></h3>
+          <div class="bloginfo"><span class="blogpic"><a href="#" title=""><img src={% static  "blog/images/knowledge.jpg" %}  /></a></span>
+            <p>{{ p.body }}</p>
+          </div>
+          <div class="autor"><span class="lm f_l"><a href="#">{{p.author}}</a></span><span class="dtime f_l">{{ p.create_time }}</span><span class="viewnum f_l">浏览（<a href="/">{{ p.view }}</a>）</span><span class="pingl f_l">评论（<a href="/">{{p.comment_set.count }}</a>）</span></span><span class="f_r"><a href={% url "knowledge:details" p.pk %} class="more">阅读原文>></a></span></div>
+        </li>
+      </ul>
+        {% endfor %}
+    {% if paginator %}
+      <div class="pagelist"><a title="Total record">&nbsp;{{ paginator.num_pages }} </a>&nbsp;&nbsp;<a href="{% url "knowledge:knowledge" 1%}">首页</a>&nbsp;
+          {% if page.has_previous %}
+          <a href="{% url "knowledge:knowledge" page.previous_page_number%}">上一页</a>&nbsp;
+              {% endif %}
+      {% for p in page.paginator.page_range %}
+          {% if p == p.number %}
+          {{ p }}
+          {% else %}
+              <a href="{% url "knowledge:knowledge" p %}">{{ p }}</a>&nbsp;&nbsp;
+          {% endif %}
+      {% endfor %}
+      {% if  page.has_next%}
+          <a href="{% url "knowledge:knowledge" page.next_page_number%}">下一页</a>
+          {% endif %}&nbsp;
+          <a href="{% url "knowledge:knowledge" paginator.num_pages%}">尾页</a></div>
+    {% endif %}
+    </div>
+  </div>
+{% endblock body %}

@@ -25,6 +25,7 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag,blank=True)
     author = models.ForeignKey(User)
     view = models.PositiveIntegerField(default=0)
+    user_like = models.ManyToManyField(User,related_name='post_like',blank=True)
     def __str__(self):
         return self.title
     def absolute_url(self):
@@ -33,8 +34,21 @@ class Post(models.Model):
     def auto_increase_view(self):
         self.view +=1
         self.save(update_fields=['view'])
+    # 下一篇
+    def next_article(self):
+        return Post.objects.filter(id__gt=self.id).order_by('id').first()
+
+    # 上一篇
+    def pre_article(self):
+        return Post.objects.filter(id__lt=self.id).order_by('-id').first()
+
+    #专门用于知识图谱专区的
+    def get_absolute_url(self):
+        return reverse("knowledge:details",kwargs={'pk':self.pk})
+
 class Users(models.Model):
-    user_name = models.CharField(max_length=60,unique=True)
-    pass_wd = models.CharField(max_length=60)
+    nick_name = models.CharField(max_length=60,verbose_name='昵称',default='路人')
+    level = models.CharField(max_length=60)
+    img=models.ImageField(default='static/blog/images/01.jpg',verbose_name='头像')
     def __str__(self):
-        return self.user_name
+        return self.nick_name

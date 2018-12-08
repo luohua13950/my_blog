@@ -6,8 +6,8 @@ import sys
 from django.contrib import admin
 from .models import Post,Category,Tag
 # Register your models here.
-import importlib
-importlib.reload(sys)
+#import importlib
+#importlib.reload(sys)
 #sys.setdefaultencoding('utf-8')
 class PostAdmin(admin.ModelAdmin):
     list_display = ['title','create_time','modify_time','category','author']

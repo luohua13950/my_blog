@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import redis
 from celery import Celery
 from django.conf import  settings
@@ -18,9 +19,9 @@ def send_register_active_email(to_email,username,token):
     username, token, token)
     sender = settings.EMAIL_FROM
     send_mail(subject, msg, sender, to_email, html_message=html_msg)
-    
-@app.task
-def upload(ff,path):
-     with open(path, 'wb+') as f:
-        for chunk in ff.chunks():
-            f.write(chunk)
+
+# @app.task
+# def upload(ff,path):
+#      with open(path, 'wb+') as f:
+#         for chunk in ff.chunks():
+#             f.write(chunk)
