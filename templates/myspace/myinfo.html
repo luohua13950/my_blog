@@ -1,0 +1,29 @@
+{% extends "my_space.html" %}
+{% block body %}
+    <form action="{% url "myspace:my_info" %}" method="post">
+    {% csrf_token %}
+        <div class="form-group">
+        <div class="col-xs-4">
+            <label for="nickname"> 昵称：</label>
+           <input type="text" class="form-control" id="nickname"  name="nickname" value="{{  user_prof.nick_name}}" >
+            <label for="level"> 等级：</label>
+           <input type="text" class="form-control" id="level" value="{{ user_prof.level }}" disabled>
+            <label for="email"> 邮箱：</label>
+           <input type="email" class="form-control" id="email" value="{{ user.email }}" name="email">
+        </div>
+            </div>
+        <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-11">
+        <button type="submit" class="btn btn-primary">修改</button>
+                    <br>
+                    <span>
+                        {% if msg %}
+                    {{ msg }}
+                    {% endif %}
+               </span>
+
+    </div>
+        </div>
+
+    </form>
+{% endblock body %}

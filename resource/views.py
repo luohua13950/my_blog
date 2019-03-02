@@ -8,6 +8,7 @@ from  django.http import HttpResponse,FileResponse
 from .forms import  UploadForm
 from mypro import settings
 from .models import Resource
+from blog.models import Users
 import os,datetime
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -21,13 +22,13 @@ PATH = "/home/luohua/upload/"
 @login_required(login_url='/login/')
 def upload_file(request):
     username = request.user
+    user_prof=Users.objects.get(user=username)
     user=User.objects.get(username=username)
     now_time = timezone.localtime(timezone.now()).strftime("%Y-%m-%d %H:%M:%S")
+    err_msg = ''
     #print(request.POST['cate'])
     if request.method == "POST":
         form = UploadForm(request.POST,request.FILES)
-        #cate.cate_name = request.POST['cate']
-        # cate.save()
         if form.is_valid():
             tt = form.cleaned_data['cate']
             cate = Cate.objects.get(cate_name=tt)
@@ -46,15 +47,15 @@ def upload_file(request):
                 else:
                     err_msg = '此文件名的文件已被其它用户上传，如继续上传请更改文件名！'
                     form = UploadForm()
-                    return render(request,'resoucre/upload.html',{'err_msg':err_msg,'form':form})
+
             except Exception as e:
                 print(e)
             return redirect('/resoucre/')
     else:
         form = UploadForm()
-    return render(request,"resoucre/upload.html",{"form":form})
+    return render(request, 'resoucre/upload.html', {'err_msg': err_msg, 'form': form,'user_prof':user_prof})
 
-@login_required(login_url='/login/')
+#@login_required(login_url='/login/')
 def download_file(resquest,pk):
     try:
         res =Resource.objects.get(id=pk)

@@ -1,0 +1,14 @@
+{% extends "my_space.html" %}
+{% block body %}
+    <ul class="list-unstyled">
+    {% for p in post_list %}
+        <li ><h3><a href="{% url "blog:detail" p.pk%}">{{ p.title }}</a></h3><p>{{ p.body|truncatechars:100 }}</p>
+        <div class="autor"><span class="lm f_l"><a href="#">   {{ p.author }}</a></span><span class="dtime f_1"><a href="">{{p.create_time}}</a></span>
+        <span class="viewnum f_l">浏览（<a href="/">{{ p.view }}</a>）</span><span class="pingl f_l">评论（<a href="/">{{p.comment_set.count }}</a>）</span></span><span class="f_r"><a href={% url "blog:detail" p.pk %} class="more">阅读原文>></a></span>
+        </div>
+        </li>
+        {% empty %}
+        暂无文章
+    {% endfor %}
+    </ul>
+{% endblock body %}

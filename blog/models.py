@@ -25,7 +25,8 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag,blank=True)
     author = models.ForeignKey(User)
     view = models.PositiveIntegerField(default=0)
-    user_like = models.ManyToManyField(User,related_name='post_like',blank=True)
+    user_like = models.ManyToManyField(User, blank=True, related_name='post_like')
+    user_store = models.ManyToManyField(User,blank=True,related_name='post_store')
     def __str__(self):
         return self.title
     def absolute_url(self):
@@ -47,8 +48,10 @@ class Post(models.Model):
         return reverse("knowledge:details",kwargs={'pk':self.pk})
 
 class Users(models.Model):
+    user = models.OneToOneField(User)
     nick_name = models.CharField(max_length=60,verbose_name='昵称',default='路人')
     level = models.CharField(max_length=60)
     img=models.ImageField(default='static/blog/images/01.jpg',verbose_name='头像')
+    last_login_ip = models.CharField(max_length=120,blank=True)
     def __str__(self):
         return self.nick_name

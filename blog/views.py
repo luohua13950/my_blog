@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.shortcuts import render,get_object_or_404,redirect
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
 from blog.models import Category,Post,Tag,Users
 from comments.forms import CommentForm
 from django.views.generic import ListView
@@ -20,11 +20,15 @@ from itsdangerous import SignatureExpired
 from django.core.mail import send_mail
 from django.conf import settings
 from untils.celery_task import send_register_active_email
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import cache_page
 # import sys
 # reload(sys)
 # sys.setdefaultencoding('utf8')
 # Create your views here.
 app_name = 'blog'
+
 class Index(ListView):
     model = Post
     template_name = 'blog/index.html'
@@ -32,18 +36,36 @@ class Index(ListView):
     #post_list = Post.objects.all().order_by("-create_time")
     #return render(request,"blog/index.html",context={"title":"欢迎你","post_list":post_list})
     paginate_by =  6
+    # def get(self, request, *args, **kwargs):
+    #     if request.META.get('HTTP_X_FORWARDED_FOR'):
+    #         ip = request.META['HTTP_X_FORWARDED_FOR']
+    #     else:
+    #         ip = request.META['REMOTE_ADDR']
+    #     print(ip)
+    #     return render(request,'blog/index.html')
+
+@cache_page(10*60)
 def detail(request,pk):
     post = get_object_or_404(Post,pk=pk)
     post.auto_increase_view()
     form = CommentForm()
     comment_list = post.comment_set.all()
+    user = request.user
+    try:
+        #uu = User.objects.get(post__user_store=request.user)
+        uu = user.post_store.get(pk=pk)
+
+        msg = '已收藏'
+    except:
+        msg='收藏'
+        print(msg)
     post.body = markdown.markdown(post.body,
                                   extensions=[
                                       'markdown.extensions.extra',
                                       'markdown.extensions.codehilite',
                                       'markdown.extensions.toc',]
                                   )
-    context = {"form":form,"post":post,"comment_list":comment_list,"comment_count":post.comment_set.count()}
+    context = {"form":form,"post":post,"comment_list":comment_list,"comment_count":post.comment_set.count(),'msg':msg}
     return render(request,'blog/detail.html', context =context)
 
 def archives(requset,year,month):
@@ -108,10 +130,6 @@ def recent_post(request):
 
 
 
-
-
-
-
 def login_blog(request):
     if request.method == "POST":
         uf = Login(request.POST)
@@ -141,13 +159,19 @@ def login_blog(request):
 def register(request):
     if request.method == 'POST':
         user_form = Register(request.POST)
+        user_profile = Users()
         if user_form.is_valid():
             username = request.POST.get('username')
             email =request.POST.get('email')
             password = request.POST.get('password')
             user = User.objects.create_user(username,email,password)
             user.is_active=0
+
             user.save()
+            user_profile.user = user
+            user_profile.nick_name = request.POST.get('nickname',None)
+            user_profile.level = 0
+            user_profile.save()
             #user = user_form.save(commit = False)
             #user.set_password(user_form.cleaned_data['password'])
             #user.save()
@@ -161,7 +185,7 @@ def register(request):
             html_msg ='<h1>%s,欢迎您成为今天开始种树会员</h1>请点击链接激活您的用户，激活后可任意下载资源<br/><a href = "http://127.0.0.1:8000/active/%s">http://127.0.0.1:8000/active/%s</a>' %(username,res,res)
             sender = settings.EMAIL_FROM
             emails = [email]
-            send_mail(subject,msg,sender,email,html_message=html_msg)
+            #send_mail(subject,msg,sender,email,html_message=html_msg)
             send_register_active_email.delay(emails,username,res)
             return HttpResponseRedirect(reverse("blog:login"))
         else:

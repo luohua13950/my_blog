@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
+{% load  cache %}
 {% block logo %}
     {% if msg %}
         <h1>{{ msg }}</h1>
     {% endif %}
 {% endblock logo %}
+
 {% block main %}
+{% cache '120' 'index' %}
     {% if err_msg %}
         <p class="text-success"><h2>{{ err_msg }}</h2></p>
     {% endif %}
@@ -35,6 +38,7 @@
                         <div class="no-post">暂无文章</div>
                         {% endif %}
                 {% endfor %}
+    {% endcache %}
         {% if is_paginated %}
             <div class="pagination-simple">
   <!-- 如果当前页还有上一页，显示一个上一页的按钮 -->

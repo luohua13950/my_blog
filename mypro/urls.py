@@ -23,5 +23,7 @@ urlpatterns = [
     url(r'^comment/',include("comments.urls")),
     url(r'',include("resource.urls")),
     url(r'',include("advise.urls")),
-    url(r'',include("knowledge.urls"))
+    url(r'',include("knowledge.urls")),
+    url(r'',include("myspace.urls")),
+    url(r'',include("onlinetools.urls")),
 ]

@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'resource',
     'advise',
     'knowledge',
+    'myspace',
+    'onlinetools',
 ]
 
 MIDDLEWARE = [
@@ -82,7 +84,7 @@ WSGI_APPLICATION = 'mypro.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'blog_pro',
+        'NAME': 'blog_test',
         'USER':'root',
         'PASSWORD':'luohua139@',
         'HOST':'118.25.181.239',
@@ -143,3 +145,17 @@ EMAIL_HOST_PASSWORD = '1qaz2wsx'
 EMAIL_USE_TLS = False
 EMAIL_SUBJECT_PREFIX = u'[从今天开始种树]'
 EMAIL_FROM = u'从今天开始种树<happyhong_cn@163.com>'
+
+# redis配置
+CACHES = {
+  "default": {
+    "BACKEND": "django_redis.cache.RedisCache",
+    "LOCATION": "redis://118.25.181.239:6379/3",
+    'TIMEOUT':300,
+    "OPTIONS": {
+      "CLIENT_CLASS": "django_redis.client.DefaultClient",
+      "CONNECTION_POOL_KWARGS": {"max_connections": 100},
+      "PASSWORD": "1qaz@WSX",
+    }
+  }
+}

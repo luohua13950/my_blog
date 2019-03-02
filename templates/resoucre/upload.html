@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+{% extends "my_space.html" %}
+{% block left %}
+{% endblock left %}
+{% block body %}
         {% if err_msg %}
         <p class="text-danger">{{ err_msg }}</p>
         {% endif %}
@@ -25,5 +22,5 @@
                </button>
          </div>
 </form>
-</body>
-</html>
+
+{% endblock body %}

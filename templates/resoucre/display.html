@@ -1,4 +1,5 @@
 {% extends 'res_base.html' %}
+{% load cache %}
 {% load blog_tags %}
     {% block logo %}
         <div class="logo">
@@ -6,6 +7,7 @@
         </div>
     {% endblock logo %}
 {% block main %}
+    {% cache '100' 'resoucre' %}
         {% if err_msg %}
         <p>{{ err_msg }}</p>
         {% endif %}
@@ -28,6 +30,7 @@
                     {% empty %}
                         <div class="no-post">暂无可下载资源,欢迎大家添加</div>
                 {% endfor %}
+    {% endcache %}
 {% if paginator %}
     <div class="pagination-simple">
 

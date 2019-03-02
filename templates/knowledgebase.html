@@ -15,6 +15,7 @@
     <link rel="stylesheet" href={% static "blog/css/pace.css" %}>
     <link rel="stylesheet" href={% static "blog/css/custom.css" %}>
     <link rel="stylesheet" href={% static "blog/css/highlights/github.css" %}>
+        <link rel="shortcut icon" href={% static "blog/images/favicon.ico" %}>
 <script src={% static  "blog/js/jquery.min.js" %} type="text/javascript"></script>
 <script src={% static  "blog/js/layer.js" %} type="text/javascript"></script>
 <!--[if lt IE 9]>
@@ -24,27 +25,18 @@
 </head>
 <body>
 <header>
-<div id="mnav">
-   <div class="logo"><a href="{% url "knowledge:knowledge" 1 %}">知识图谱专区</a></div>
-    <h2 id="mnavh"><span class="navicon"></span></h2>
-    <ul id="starlist">
-      <li><a href="{% url "blog:index" %}">网站首页</a></li>
-      <li><a href="#">关于我</a></li>
+<nav class="navbar navbar-default">
+<div class=" navbar-collapse collapse " style="text-align: center">
+    	<div class="navbar-header">
+		<a class="navbar-brand" href="#">知识图谱专区</a>
+	</div>
+    <ul class="nav nav-pills">
+        <li {% if request.path|slice:"1" == "" %} class="active" {% endif %} ><a href="{% url "blog:index" %}"><h3>首页</h3></a></li>
+        <li {% if request.path|slice:"8" == "/onlinetool" %} class="active" {% endif %}><a href="#"><h3>在线工具</h3></a></li>
+        <li {% if request.path|slice:"8" == "/knowled" %} class="active" {% endif %}><a href="{% url "knowledge:knowledge"  1 %}"><h3>知识图谱</h3></a></li>
     </ul>
 </div>
-<script>
-window.onload = function ()
-{
-	var oH2 = document.getElementById("mnavh"); 
-	var oUl = document.getElementById("starlist");  
-	oH2.onclick = function ()
-	{
-		var style = oUl.style;
-		style.display = style.display == "block" ? "none" : "block";
-		oH2.className = style.display == "block" ? "open" : ""
-	}
-}
-</script>
+</nav>
 </header>
 {% block body %}
 {% endblock body %}
@@ -100,7 +92,7 @@ window.onload = function ()
 </article>
 {% block foot %}
 <footer>
-  <p>Design by <a href="/">个人博客</a> <a href="/">ICP备11002373号</a></p>
+  <p>Design by <a href="/">个人博客</a> <a href="/">滇ICP备18009362号</a></p>
 </footer>
 {% endblock foot %}
 <script src='{% static "blog/js/jquery.js" %}'></script>

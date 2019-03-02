@@ -19,5 +19,6 @@ urlpatterns = [
     url(r'^allhot/$',views.all_hot,name='all_hot'),
     url(r'^recent/$',views.recent_post,name='recent_post'),
     url(r'^active/(?P<token>.*)$',views.user_active,name='active'),
-    url(r'^mailtoactive/$',views.send_mail_to_active,name='mail_active')
+    url(r'^mailtoactive/$',views.send_mail_to_active,name='mail_active'),
+
 ]

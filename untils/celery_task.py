@@ -8,7 +8,7 @@ import django
 #初始化，不加celery会报错
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mypro.settings")
 django.setup()
-app = Celery('untils.celery_task',broker="redis://:123456@118.25.181.239:6379/1")
+app = Celery('untils.celery_task',broker="redis://:1qaz@WSX@118.25.181.239:6379/1")
 
 @app.task
 def send_register_active_email(to_email,username,token):

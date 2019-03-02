@@ -1,0 +1,104 @@
+{% load staticfiles %}
+{% load blog_tags %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href={% static "blog/css/bootstrap.min.css" %}>
+    <link rel="stylesheet" href={% static "blog/css/index_1.css" %}>
+    <link rel="stylesheet" href={% static "blog/css/index.css" %}>
+    <link rel="shortcut icon" href={% static "blog/images/favicon.ico" %}>
+    <script src={% static "blog/js/jquery-2.1.3.min.js" %}></script>
+    <script src={% static "blog/js/bootstrap.min.js" %}></script>
+</head>
+<body>
+<body>
+
+<nav class="navbar navbar-default">
+<div class=" navbar-collapse collapse " style="text-align: center">
+    	<div class="navbar-header">
+		<a class="navbar-brand" href="#">{{ user_prof.nick_name }}个人空间</a>
+	</div>
+    <ul class="nav nav-pills">
+        <li {% if request.path|slice:"1" == "" %} class="active" {% endif %} ><a href="{% url "blog:index" %}"><h3>首页</h3></a></li>
+        <li {% if request.path|slice:"3" == "/my" %} class="active" {% endif %} ><a href="{% url "myspace:my_info" %}"><h3>我的空间</h3></a></li>
+        <li {% if request.path|slice:"9" == "/pdfsplit" %} class="active" {% endif %}><a href="{% url "onlinetools:split_pdf" %}"><h3>在线工具</h3></a></li>
+        <li {% if request.path|slice:"8" == "/knowled" %} class="active" {% endif %}><a href="{% url "knowledge:knowledge"  1 %}"><h3>知识图谱</h3></a></li>
+    </ul>
+</div>
+</nav>
+<div class="container">
+    <div class=" row">
+
+        <div class="col-md-2 col-sm-2 col-xs-4">
+        {% block left %}
+    <ul class="nav nav-pills nav-stacked">
+        <li {% if request.path|slice:"7" == "/myinfo" %} class="active" {% endif %} ><a href="{% url "myspace:my_info" %}">个人信息</a></li>
+        <li {% if request.path|slice:"7" == "/mypost" %} class="active" {% endif %} ><a href="{% url "myspace:my_post" %}">我的文章</a></li>
+        <li {% if request.path|slice:"8" == "/mystore" %} class="active" {% endif %}><a href="{% url "myspace:my_store" %}">收藏的文章</a></li>
+        <li><a href="#">最近动态</a></li>
+        <li><a href="#">历史浏览记录</a></li>
+                <li class="dropdown">
+             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    其它
+                    <b class="caret"></b>
+                </a>
+            <ul class="dropdown-menu">
+                <li><a href="#">即将上线</a></li>
+                 <li><a href="#">即将上线</a></li>
+            </ul>
+        </li>
+    </ul>
+        {% endblock left %}
+        </div>
+
+     <div class="col-md-7">
+         {% block body %}
+       <!--正文-->
+       <p>等分按钮的效果在移动端上特别的实用。整个按钮组宽度是容器的100%，而按钮组里面的每个按钮平分整个容器宽度。例如，如果你按钮组里面有五个按钮，那么每个按钮是20%的宽度，如果有四个按钮，那么每个按钮是25%宽度，以此类推。
+
+等分按钮也常被称为是自适应分组按钮，其实现方法也非常的简单，只需要在按钮组“btn-group”上追加一个“btn-group-justified”类名，如下所示：</p>
+     {% endblock body %}
+     </div>
+
+
+     <div class="col-md-3">
+        <!--相关信息-->
+        {% block right %}
+            <img src="{% static "blog/images/a4.jpg" %}" class="img-circle" width="100" height="100">
+    
+
+         <ul class="list-unstyled">
+             <li ><a href="#">昵称：{{ user_prof.nick_name }}</a></li>
+             <li><a href="#">等级：{{ user_prof.level }}</a></li>
+             <li><a href="#">邮箱：{{ user.email }}</a></li>
+             {% if user.is_authenticated %}
+                 <li><a href="#">当前登录地点：{{ region}}</a></li>
+            <li><a href="#">资源上传：{{ user|user_upload }}次</a></li>
+            <li><a href="#">文章发布：{{ user|user_post_article }}篇</a></li>
+             {% else %}
+                 <li><a href="#">资源上传：(游客)</a></li>
+            <li><a href="#">文章发布：(游客)</a></li>
+             {% endif %}
+            <span class="label label-success">管理员哈</span>
+            <span class="label label-success">只能四个标签哦</span>
+            <span class="label label-success">第三个</span>
+            <span class="label label-success">第四个</span>
+
+         </ul>
+         {% endblock right %}
+     </div>
+
+    </div>
+
+</div>
+
+ <footer class="navbar-fixed-bottom">
+   <div class="container" style="text-align: center">
+     联系我
+  </div>
+ </footer>
+</body>
+</body>
+</html>
